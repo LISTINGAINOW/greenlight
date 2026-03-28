@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { BookOpen, RotateCcw, SlidersHorizontal, BarChart3 } from 'lucide-react';
+import { BookOpen, RotateCcw, SlidersHorizontal, Plus } from 'lucide-react';
 import ScriptCard from '@/components/ScriptCard';
 import ScriptDetail from '@/components/ScriptDetail';
 import GreenlitList from '@/components/GreenlitList';
 import FilterDrawer from '@/components/FilterDrawer';
 import StatsBar from '@/components/StatsBar';
+import UploadScript from '@/components/UploadScript';
 import { mockScripts, Script, Rating, Genre, Format } from '@/data/scripts';
 
 type View = 'swipe' | 'pipeline' | 'filters';
@@ -18,8 +19,12 @@ export default function Home() {
   const [detailScript, setDetailScript] = useState<Script | null>(null);
   const [genreFilter, setGenreFilter] = useState<Genre | 'all'>('all');
   const [formatFilter, setFormatFilter] = useState<Format | 'all'>('all');
+  const [showUpload, setShowUpload] = useState(false);
+  const [customScripts, setCustomScripts] = useState<Script[]>([]);
 
-  const filteredScripts = mockScripts.filter((s) => {
+  const allScripts = [...mockScripts, ...customScripts];
+
+  const filteredScripts = allScripts.filter((s) => {
     if (genreFilter !== 'all' && s.genre !== genreFilter) return false;
     if (formatFilter !== 'all' && s.format !== formatFilter) return false;
     if (greenlit.some((g) => g.id === s.id)) return false;
@@ -86,7 +91,7 @@ export default function Home() {
           setGenreFilter('all');
           setFormatFilter('all');
         }}
-        resultCount={mockScripts.filter((s) => {
+        resultCount={allScripts.filter((s) => {
           if (genreFilter !== 'all' && s.genre !== genreFilter) return false;
           if (formatFilter !== 'all' && s.format !== formatFilter) return false;
           return true;
@@ -124,7 +129,7 @@ export default function Home() {
       </header>
 
       {/* Stats bar */}
-      <StatsBar total={mockScripts.length} reviewed={totalReviewed} greenlit={greenlit.length} passed={passed.length} />
+      <StatsBar total={allScripts.length} reviewed={totalReviewed} greenlit={greenlit.length} passed={passed.length} />
 
       {/* Card stack */}
       <main className="flex flex-1 items-center justify-center px-4 py-4">
@@ -197,10 +202,42 @@ export default function Home() {
             Undo
           </button>
         )}
+        <button
+          type="button"
+          onClick={() => setShowUpload(true)}
+          className="flex items-center gap-1.5 rounded-full bg-midnight-700 px-4 py-2 text-sm font-medium text-midnight-300 transition hover:bg-midnight-600 hover:text-white"
+        >
+          <Plus className="h-4 w-4" />
+          Upload
+        </button>
         <p className="text-sm text-midnight-500">
           {filteredScripts.length} in stack
         </p>
       </footer>
+
+      {/* Upload modal */}
+      {showUpload && (
+        <UploadScript
+          onClose={() => setShowUpload(false)}
+          onUpload={(data) => {
+            const newScript: Script = {
+              id: `custom-${Date.now()}`,
+              title: data.title,
+              author: data.author,
+              logline: data.logline,
+              genre: 'Drama',
+              format: 'Feature',
+              pages: data.pages,
+              tone: 'To be determined',
+              comparables: 'N/A',
+              submittedBy: 'You',
+              submittedDate: new Date().toISOString().split('T')[0],
+            };
+            setCustomScripts((prev) => [newScript, ...prev]);
+            setShowUpload(false);
+          }}
+        />
+      )}
 
       {/* Detail modal */}
       {detailScript && (
