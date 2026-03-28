@@ -8,6 +8,7 @@ import GreenlitList from '@/components/GreenlitList';
 import FilterDrawer from '@/components/FilterDrawer';
 import StatsBar from '@/components/StatsBar';
 import UploadScript from '@/components/UploadScript';
+import KeyboardHints from '@/components/KeyboardHints';
 import { mockScripts, Script, Rating, Genre, Format } from '@/data/scripts';
 
 type View = 'swipe' | 'pipeline' | 'filters';
@@ -256,6 +257,14 @@ export default function Home() {
           currentRating={greenlit.find((g) => g.id === detailScript.id)?.rating || null}
         />
       )}
+      {/* Keyboard shortcuts (desktop only) */}
+      <KeyboardHints
+        onLeft={handleSwipeLeft}
+        onRight={handleSwipeRight}
+        onInfo={() => filteredScripts[0] && setDetailScript(filteredScripts[0])}
+        onUndo={handleUndo}
+        enabled={view === 'swipe' && filteredScripts.length > 0 && !detailScript && !showUpload}
+      />
     </div>
   );
 }
