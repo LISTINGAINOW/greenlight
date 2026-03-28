@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { BookOpen, RotateCcw, SlidersHorizontal, Plus } from 'lucide-react';
+import { BookOpen, RotateCcw, SlidersHorizontal, Plus, TrendingUp, ClipboardList } from 'lucide-react';
 import ScriptCard from '@/components/ScriptCard';
 import ScriptDetail from '@/components/ScriptDetail';
 import GreenlitList from '@/components/GreenlitList';
@@ -10,9 +10,13 @@ import StatsBar from '@/components/StatsBar';
 import QuickStats from '@/components/QuickStats';
 import UploadScript from '@/components/UploadScript';
 import KeyboardHints from '@/components/KeyboardHints';
+import DailyStreak, { useStreak } from '@/components/DailyStreak';
+import SimilarScripts from '@/components/SimilarScripts';
+import TrendingInsights from '@/components/TrendingInsights';
+import { ReadingProgress, type ReadingStatus } from '@/components/ReadingTracker';
 import { mockScripts, Script, Rating, Genre, Format } from '@/data/scripts';
 
-type View = 'swipe' | 'pipeline' | 'filters';
+type View = 'swipe' | 'pipeline' | 'filters' | 'reading';
 
 export default function Home() {
   const [view, setView] = useState<View>('swipe');
@@ -22,7 +26,10 @@ export default function Home() {
   const [genreFilter, setGenreFilter] = useState<Genre | 'all'>('all');
   const [formatFilter, setFormatFilter] = useState<Format | 'all'>('all');
   const [showUpload, setShowUpload] = useState(false);
+  const [showTrending, setShowTrending] = useState(false);
   const [customScripts, setCustomScripts] = useState<Script[]>([]);
+  const [readingStatuses, setReadingStatuses] = useState<Record<string, ReadingStatus>>({});
+  const { streak, recordSwipe, mounted } = useStreak();
 
   const allScripts = [...mockScripts, ...customScripts];
 
@@ -38,15 +45,17 @@ export default function Home() {
     const script = filteredScripts[0];
     if (script) {
       setGreenlit((prev) => [...prev, { ...script, rating: 'greenlight' as Rating }]);
+      recordSwipe();
     }
-  }, [filteredScripts]);
+  }, [filteredScripts, recordSwipe]);
 
   const handleSwipeLeft = useCallback(() => {
     const script = filteredScripts[0];
     if (script) {
       setPassed((prev) => [...prev, script.id]);
+      recordSwipe();
     }
-  }, [filteredScripts]);
+  }, [filteredScripts, recordSwipe]);
 
   const handleUndo = () => {
     if (passed.length > 0) {
@@ -69,6 +78,17 @@ export default function Home() {
   };
 
   const totalReviewed = greenlit.length + passed.length;
+
+  if (view === 'reading') {
+    return (
+      <ReadingProgress
+        scripts={greenlit.map(s => ({ ...s, readingStatus: readingStatuses[s.id] || 'pipeline' }))}
+        onBack={() => setView('swipe')}
+        onStatusChange={(id, status) => setReadingStatuses(prev => ({ ...prev, [id]: status }))}
+        onSelect={(s) => setDetailScript(s)}
+      />
+    );
+  }
 
   if (view === 'pipeline') {
     return (
@@ -106,32 +126,54 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-midnight-900">
       {/* Header */}
       <header className="flex items-center justify-between px-5 pb-2 pt-4">
-        <button
-          type="button"
-          onClick={() => setView('filters')}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-midnight-700 transition hover:bg-midnight-600"
-        >
-          <SlidersHorizontal className="h-5 w-5 text-midnight-300" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setView('filters')}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-midnight-700 transition hover:bg-midnight-600"
+          >
+            <SlidersHorizontal className="h-5 w-5 text-midnight-300" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowTrending(true)}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-midnight-700 transition hover:bg-midnight-600"
+          >
+            <TrendingUp className="h-5 w-5 text-cinema-400" />
+          </button>
+        </div>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-green-400">🟢 GreenLight</h1>
         </div>
-        <button
-          type="button"
-          onClick={() => setView('pipeline')}
-          className="relative flex h-10 w-10 items-center justify-center rounded-full bg-midnight-700 transition hover:bg-midnight-600"
-        >
-          <BookOpen className={`h-5 w-5 ${greenlit.length > 0 ? 'text-green-400' : 'text-midnight-300'}`} />
-          {greenlit.length > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-[10px] font-bold text-white">
-              {greenlit.length}
-            </span>
-          )}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setView('reading')}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-midnight-700 transition hover:bg-midnight-600"
+            title="Reading progress"
+          >
+            <ClipboardList className={`h-5 w-5 ${greenlit.length > 0 ? 'text-yellow-400' : 'text-midnight-300'}`} />
+          </button>
+          <button
+            type="button"
+            onClick={() => setView('pipeline')}
+            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-midnight-700 transition hover:bg-midnight-600"
+          >
+            <BookOpen className={`h-5 w-5 ${greenlit.length > 0 ? 'text-green-400' : 'text-midnight-300'}`} />
+            {greenlit.length > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-[10px] font-bold text-white">
+                {greenlit.length}
+              </span>
+            )}
+          </button>
+        </div>
       </header>
 
       {/* Stats bar */}
       <StatsBar total={allScripts.length} reviewed={totalReviewed} greenlit={greenlit.length} passed={passed.length} />
+
+      {/* Daily streak */}
+      {mounted && <DailyStreak streak={streak} />}
 
       {/* Quick stats (shows after 3+ reviews) */}
       <QuickStats greenlit={greenlit} passed={passed.length} total={allScripts.length} />
@@ -259,8 +301,13 @@ export default function Home() {
             }
           }}
           currentRating={greenlit.find((g) => g.id === detailScript.id)?.rating || null}
+          greenlitIds={greenlit.map(g => g.id)}
+          onSelectSimilar={(s) => setDetailScript(s)}
         />
       )}
+      {/* Trending insights */}
+      {showTrending && <TrendingInsights onClose={() => setShowTrending(false)} />}
+
       {/* Keyboard shortcuts (desktop only) */}
       <KeyboardHints
         onLeft={handleSwipeLeft}

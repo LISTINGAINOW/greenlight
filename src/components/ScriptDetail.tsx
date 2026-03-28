@@ -3,6 +3,7 @@
 import { X, Check, Clock, FileText, Film, User, Calendar, MessageSquare, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import AICoverage from '@/components/AICoverage';
+import SimilarScripts from '@/components/SimilarScripts';
 import type { Script, Rating } from '@/data/scripts';
 
 interface Props {
@@ -10,6 +11,8 @@ interface Props {
   onClose: () => void;
   onRate: (rating: Rating) => void;
   currentRating: Rating;
+  greenlitIds?: string[];
+  onSelectSimilar?: (script: Script) => void;
 }
 
 const genreColors: Record<string, string> = {
@@ -21,9 +24,11 @@ const genreColors: Record<string, string> = {
   Action: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
   Romance: 'bg-pink-500/20 text-pink-300 border-pink-500/30',
   Documentary: 'bg-gray-500/20 text-gray-300 border-gray-500/30',
+  Animation: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
+  Musical: 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30',
 };
 
-export default function ScriptDetail({ script, onClose, onRate, currentRating }: Props) {
+export default function ScriptDetail({ script, onClose, onRate, currentRating, greenlitIds = [], onSelectSimilar }: Props) {
   const [notes, setNotes] = useState(script.notes || '');
   const [showAI, setShowAI] = useState(false);
 
@@ -83,11 +88,43 @@ export default function ScriptDetail({ script, onClose, onRate, currentRating }:
             </div>
           </div>
 
+          {/* Writer bio */}
+          {script.writerBio && (
+            <div className="mt-6 rounded-xl border border-midnight-600 bg-midnight-700/50 p-4">
+              <h3 className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-cinema-400">
+                <User className="h-3.5 w-3.5" />
+                About the Writer
+              </h3>
+              <p className="text-sm text-midnight-200">{script.writerBio}</p>
+              {script.pastCredits && script.pastCredits.length > 0 && (
+                <div className="mt-2">
+                  <p className="text-xs font-medium text-midnight-400">Past credits:</p>
+                  <ul className="mt-1 space-y-0.5">
+                    {script.pastCredits.map((credit, i) => (
+                      <li key={i} className="text-xs text-midnight-300">• {credit}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Logline */}
           <div className="mt-6">
             <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-midnight-400">Logline</h3>
             <p className="text-base leading-relaxed text-midnight-100">{script.logline}</p>
           </div>
+
+          {/* Tags */}
+          {script.tags && script.tags.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {script.tags.map((tag) => (
+                <span key={tag} className="rounded-full bg-midnight-700 px-3 py-1 text-xs font-medium text-midnight-300">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
 
           {/* Tone */}
           <div className="mt-5">
@@ -128,6 +165,15 @@ export default function ScriptDetail({ script, onClose, onRate, currentRating }:
 
           {showAI && (
             <AICoverage script={script} onClose={() => setShowAI(false)} />
+          )}
+
+          {/* Similar scripts */}
+          {onSelectSimilar && (
+            <SimilarScripts
+              script={script}
+              onSelect={(s) => { onSelectSimilar(s); }}
+              greenlitIds={greenlitIds}
+            />
           )}
 
           {/* Rating buttons */}

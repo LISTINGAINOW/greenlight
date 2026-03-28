@@ -3,7 +3,16 @@
 import { useState } from 'react';
 import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 import { Check, X, Info, Clock, FileText, Film, Star } from 'lucide-react';
+import { hapticLight, hapticMedium, hapticSuccess } from '@/lib/haptics';
 import type { Script } from '@/data/scripts';
+
+const budgetEmoji: Record<string, string> = {
+  Micro: '💰',
+  Low: '💰💰',
+  Medium: '💰💰💰',
+  High: '💰💰💰💰',
+  Tentpole: '💰💰💰💰💰',
+};
 
 interface Props {
   script: Script;
@@ -22,6 +31,8 @@ const genreColors: Record<string, string> = {
   Action: 'bg-orange-500/20 text-orange-300',
   Romance: 'bg-pink-500/20 text-pink-300',
   Documentary: 'bg-gray-500/20 text-gray-300',
+  Animation: 'bg-indigo-500/20 text-indigo-300',
+  Musical: 'bg-fuchsia-500/20 text-fuchsia-300',
 };
 
 const formatIcons: Record<string, string> = {
@@ -44,10 +55,12 @@ export default function ScriptCard({ script, onSwipeLeft, onSwipeRight, onInfo, 
     if (info.offset.x > threshold) {
       setExitX(500);
       setShowOverlay('greenlight');
+      hapticSuccess();
       setTimeout(onSwipeRight, 300);
     } else if (info.offset.x < -threshold) {
       setExitX(-500);
       setShowOverlay('pass');
+      hapticMedium();
       setTimeout(onSwipeLeft, 300);
     }
   };
@@ -56,10 +69,12 @@ export default function ScriptCard({ script, onSwipeLeft, onSwipeRight, onInfo, 
     if (direction === 'right') {
       setExitX(500);
       setShowOverlay('greenlight');
+      hapticSuccess();
       setTimeout(onSwipeRight, 300);
     } else {
       setExitX(-500);
       setShowOverlay('pass');
+      hapticMedium();
       setTimeout(onSwipeLeft, 300);
     }
   };
@@ -98,9 +113,16 @@ export default function ScriptCard({ script, onSwipeLeft, onSwipeRight, onInfo, 
 
         {/* Header badges */}
         <div className="flex items-center justify-between px-6 pt-6">
-          <span className={`rounded-full px-3 py-1 text-xs font-bold ${genreColors[script.genre] || 'bg-gray-500/20 text-gray-300'}`}>
-            {script.genre}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className={`rounded-full px-3 py-1 text-xs font-bold ${genreColors[script.genre] || 'bg-gray-500/20 text-gray-300'}`}>
+              {script.genre}
+            </span>
+            {script.budget && (
+              <span className="rounded-full bg-midnight-600 px-2 py-0.5 text-[10px] text-midnight-200" title={`${script.budget} budget`}>
+                {budgetEmoji[script.budget]}
+              </span>
+            )}
+          </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-midnight-300">
               {formatIcons[script.format]} {script.format}
@@ -115,8 +137,18 @@ export default function ScriptCard({ script, onSwipeLeft, onSwipeRight, onInfo, 
         </div>
 
         {/* Logline — the star of the show */}
-        <div className="flex-1 px-6 pt-5">
+        <div className="flex-1 overflow-y-auto px-6 pt-5">
           <p className="text-lg leading-relaxed text-midnight-100">{script.logline}</p>
+          {/* Tags */}
+          {script.tags && script.tags.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {script.tags.slice(0, 4).map((tag) => (
+                <span key={tag} className="rounded-full bg-midnight-600/60 px-2.5 py-0.5 text-[10px] font-medium text-midnight-200">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Meta bar */}

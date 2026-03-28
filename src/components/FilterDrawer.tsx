@@ -22,6 +22,8 @@ const genres: Array<{ value: Genre | 'all'; label: string; emoji: string }> = [
   { value: 'Sci-Fi', label: 'Sci-Fi', emoji: '🚀' },
   { value: 'Action', label: 'Action', emoji: '💥' },
   { value: 'Romance', label: 'Romance', emoji: '💕' },
+  { value: 'Animation', label: 'Animation', emoji: '✨' },
+  { value: 'Musical', label: 'Musical', emoji: '🎵' },
 ];
 
 const formats: Array<{ value: Format | 'all'; label: string }> = [
