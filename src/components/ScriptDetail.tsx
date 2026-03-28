@@ -1,7 +1,8 @@
 'use client';
 
-import { X, Check, Clock, FileText, Film, User, Calendar, MessageSquare } from 'lucide-react';
+import { X, Check, Clock, FileText, Film, User, Calendar, MessageSquare, Sparkles } from 'lucide-react';
 import { useState } from 'react';
+import AICoverage from '@/components/AICoverage';
 import type { Script, Rating } from '@/data/scripts';
 
 interface Props {
@@ -24,6 +25,7 @@ const genreColors: Record<string, string> = {
 
 export default function ScriptDetail({ script, onClose, onRate, currentRating }: Props) {
   const [notes, setNotes] = useState(script.notes || '');
+  const [showAI, setShowAI] = useState(false);
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
@@ -113,6 +115,20 @@ export default function ScriptDetail({ script, onClose, onRate, currentRating }:
               rows={3}
             />
           </div>
+
+          {/* AI Coverage button */}
+          <button
+            type="button"
+            onClick={() => setShowAI(true)}
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-cinema-500/30 bg-cinema-500/10 py-3 text-sm font-semibold text-cinema-400 transition hover:bg-cinema-500/20"
+          >
+            <Sparkles className="h-4 w-4" />
+            Generate AI Coverage
+          </button>
+
+          {showAI && (
+            <AICoverage script={script} onClose={() => setShowAI(false)} />
+          )}
 
           {/* Rating buttons */}
           <div className="mt-6">
