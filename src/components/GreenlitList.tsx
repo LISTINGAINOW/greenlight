@@ -1,6 +1,8 @@
 'use client';
 
-import { ArrowLeft, Check, Clock, FileText, Star, Trash2 } from 'lucide-react';
+import { ArrowLeft, Check, Clock, FileText, Star, Trash2, Share2 } from 'lucide-react';
+import { useState } from 'react';
+import SharePipeline from '@/components/SharePipeline';
 import type { Script, Rating } from '@/data/scripts';
 
 interface Props {
@@ -28,6 +30,7 @@ const genreEmoji: Record<string, string> = {
 };
 
 export default function GreenlitList({ scripts, onBack, onSelect, onRemove }: Props) {
+  const [showShare, setShowShare] = useState(false);
   const greenlit = scripts.filter((s) => s.rating === 'greenlight');
   const considering = scripts.filter((s) => s.rating === 'consider');
 
@@ -49,6 +52,16 @@ export default function GreenlitList({ scripts, onBack, onSelect, onRemove }: Pr
               {greenlit.length} greenlit · {considering.length} considering
             </p>
           </div>
+          {scripts.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowShare(true)}
+              className="ml-auto flex items-center gap-1.5 rounded-full bg-midnight-700 px-3 py-2 text-sm text-midnight-300 transition hover:bg-midnight-600 hover:text-white"
+            >
+              <Share2 className="h-4 w-4" />
+              Share
+            </button>
+          )}
         </div>
 
         {scripts.length === 0 ? (
@@ -98,6 +111,10 @@ export default function GreenlitList({ scripts, onBack, onSelect, onRemove }: Pr
           </>
         )}
       </div>
+
+      {showShare && (
+        <SharePipeline scripts={scripts} onClose={() => setShowShare(false)} />
+      )}
     </div>
   );
 }
