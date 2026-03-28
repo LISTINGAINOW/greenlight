@@ -7,6 +7,7 @@ import ScriptDetail from '@/components/ScriptDetail';
 import GreenlitList from '@/components/GreenlitList';
 import FilterDrawer from '@/components/FilterDrawer';
 import StatsBar from '@/components/StatsBar';
+import QuickStats from '@/components/QuickStats';
 import UploadScript from '@/components/UploadScript';
 import KeyboardHints from '@/components/KeyboardHints';
 import { mockScripts, Script, Rating, Genre, Format } from '@/data/scripts';
@@ -131,6 +132,9 @@ export default function Home() {
 
       {/* Stats bar */}
       <StatsBar total={allScripts.length} reviewed={totalReviewed} greenlit={greenlit.length} passed={passed.length} />
+
+      {/* Quick stats (shows after 3+ reviews) */}
+      <QuickStats greenlit={greenlit} passed={passed.length} total={allScripts.length} />
 
       {/* Card stack */}
       <main className="flex flex-1 items-center justify-center px-4 py-4">
