@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
-import { Check, X, Info, Clock, FileText, Film } from 'lucide-react';
+import { Check, X, Info, Clock, FileText, Film, Star } from 'lucide-react';
 import type { Script } from '@/data/scripts';
 
 interface Props {
@@ -124,6 +124,10 @@ export default function ScriptCard({ script, onSwipeLeft, onSwipeRight, onInfo, 
           <div className="flex items-center gap-1.5 text-sm text-midnight-300">
             <FileText className="h-4 w-4" />
             {script.pages} pg
+          </div>
+          <div className="flex items-center gap-1.5 text-sm text-midnight-300">
+            <Clock className="h-4 w-4" />
+            ~{Math.ceil(script.pages * 0.8)} min read
           </div>
           <div className="flex items-center gap-1.5 text-sm text-midnight-300">
             <Film className="h-4 w-4" />
