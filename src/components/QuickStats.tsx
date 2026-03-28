@@ -32,7 +32,7 @@ export default function QuickStats({ greenlit, passed, total }: Props) {
       <div className="rounded-xl bg-midnight-800 p-3">
         <div className="flex items-center gap-1.5 text-xs text-midnight-400">
           <TrendingUp className="h-3 w-3" />
-          Greenlight rate
+          Approve rate
         </div>
         <p className="mt-1 text-lg font-bold text-green-400">{greenlitRate}%</p>
       </div>

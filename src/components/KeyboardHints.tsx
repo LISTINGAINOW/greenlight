@@ -64,7 +64,7 @@ export default function KeyboardHints({ onLeft, onRight, onInfo, onUndo, enabled
       </div>
       <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-sm text-midnight-300">
         <span><kbd className="rounded bg-midnight-700 px-1.5 py-0.5 text-xs font-mono text-midnight-200">←</kbd> Pass</span>
-        <span><kbd className="rounded bg-midnight-700 px-1.5 py-0.5 text-xs font-mono text-midnight-200">→</kbd> Greenlight</span>
+        <span><kbd className="rounded bg-midnight-700 px-1.5 py-0.5 text-xs font-mono text-midnight-200">→</kbd> Approve</span>
         <span><kbd className="rounded bg-midnight-700 px-1.5 py-0.5 text-xs font-mono text-midnight-200">↑</kbd> Details</span>
         <span><kbd className="rounded bg-midnight-700 px-1.5 py-0.5 text-xs font-mono text-midnight-200">⌘Z</kbd> Undo</span>
       </div>

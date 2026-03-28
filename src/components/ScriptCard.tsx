@@ -97,7 +97,7 @@ export default function ScriptCard({ script, onSwipeLeft, onSwipeRight, onInfo, 
           style={{ opacity: greenOpacity }}
         >
           <div className="rotate-[-15deg] rounded-xl border-4 border-green-400 px-8 py-3">
-            <span className="text-4xl font-black tracking-wider text-green-400">GREENLIGHT</span>
+            <span className="text-4xl font-black tracking-wider text-green-400">APPROVE</span>
           </div>
         </motion.div>
 
@@ -206,7 +206,7 @@ export default function ScriptCard({ script, onSwipeLeft, onSwipeRight, onInfo, 
           <div className="absolute inset-0 z-30 flex items-center justify-center rounded-3xl bg-green-500/30 backdrop-blur-sm">
             <div className="text-center">
               <div className="text-7xl">🟢</div>
-              <p className="mt-2 text-2xl font-bold text-green-400">Greenlit!</p>
+              <p className="mt-2 text-2xl font-bold text-green-400">Approved!</p>
             </div>
           </div>
         )}

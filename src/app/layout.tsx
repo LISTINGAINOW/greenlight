@@ -6,13 +6,13 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains' });
 
 export const metadata: Metadata = {
-  title: 'GreenLight — Swipe Scripts, Find Gold',
-  description: 'The fastest way to read scripts. Swipe through loglines, greenlight the ones worth reading, and track your coverage.',
+  title: 'ScriptSwipe — Swipe on Scripts',
+  description: 'The fastest way to read scripts. Swipe through loglines, approve the ones worth reading, and track your coverage.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'GreenLight',
+    title: 'ScriptSwipe',
   },
 };
 

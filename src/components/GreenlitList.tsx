@@ -13,7 +13,7 @@ interface Props {
 }
 
 const ratingBadge: Record<string, { label: string; className: string }> = {
-  greenlight: { label: '🟢 Greenlit', className: 'bg-green-500/20 text-green-300' },
+  greenlight: { label: '🟢 Approved', className: 'bg-green-500/20 text-green-300' },
   consider: { label: '🟡 Consider', className: 'bg-yellow-500/20 text-yellow-300' },
   pass: { label: '🔴 Passed', className: 'bg-red-500/20 text-red-300' },
 };
@@ -31,7 +31,7 @@ const genreEmoji: Record<string, string> = {
 
 export default function GreenlitList({ scripts, onBack, onSelect, onRemove }: Props) {
   const [showShare, setShowShare] = useState(false);
-  const greenlit = scripts.filter((s) => s.rating === 'greenlight');
+  const approved = scripts.filter((s) => s.rating === 'greenlight');
   const considering = scripts.filter((s) => s.rating === 'consider');
 
   return (
@@ -49,7 +49,7 @@ export default function GreenlitList({ scripts, onBack, onSelect, onRemove }: Pr
           <div>
             <h1 className="text-2xl font-bold text-white">Your Pipeline</h1>
             <p className="text-sm text-midnight-400">
-              {greenlit.length} greenlit · {considering.length} considering
+              {approved.length} approved · {considering.length} considering
             </p>
           </div>
           {scripts.length > 0 && (
@@ -79,15 +79,15 @@ export default function GreenlitList({ scripts, onBack, onSelect, onRemove }: Pr
           </div>
         ) : (
           <>
-            {/* Greenlit section */}
-            {greenlit.length > 0 && (
+            {/* Approved section */}
+            {approved.length > 0 && (
               <div className="mb-8">
                 <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-green-400">
                   <Check className="h-4 w-4" />
-                  Greenlit ({greenlit.length})
+                  Approved ({approved.length})
                 </h2>
                 <div className="space-y-3">
-                  {greenlit.map((script) => (
+                  {approved.map((script) => (
                     <ScriptRow key={script.id} script={script} onSelect={onSelect} onRemove={onRemove} />
                   ))}
                 </div>

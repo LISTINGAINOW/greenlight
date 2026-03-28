@@ -143,7 +143,7 @@ export default function Home() {
           </button>
         </div>
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-green-400">🟢 GreenLight</h1>
+          <h1 className="text-2xl font-bold text-green-400">🟢 ScriptSwipe</h1>
         </div>
         <div className="flex items-center gap-2">
           <button

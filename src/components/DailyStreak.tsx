@@ -13,7 +13,7 @@ interface StreakData {
 
 function getStreakData(): StreakData {
   try {
-    const stored = localStorage.getItem('greenlight-streak');
+    const stored = localStorage.getItem('scriptswipe-streak');
     return stored ? JSON.parse(stored) : { currentStreak: 0, longestStreak: 0, totalReviewed: 0, todayCount: 0, lastDate: null };
   } catch {
     return { currentStreak: 0, longestStreak: 0, totalReviewed: 0, todayCount: 0, lastDate: null };
@@ -21,7 +21,7 @@ function getStreakData(): StreakData {
 }
 
 function saveStreakData(data: StreakData) {
-  localStorage.setItem('greenlight-streak', JSON.stringify(data));
+  localStorage.setItem('scriptswipe-streak', JSON.stringify(data));
 }
 
 export function useStreak() {

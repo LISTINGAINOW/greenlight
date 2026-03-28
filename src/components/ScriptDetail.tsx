@@ -211,7 +211,7 @@ export default function ScriptDetail({ script, onClose, onRate, currentRating, g
                     : 'bg-midnight-700 text-midnight-300 hover:bg-green-500/10 hover:text-green-400'
                 }`}
               >
-                🟢 Greenlight
+                🟢 Approve
               </button>
             </div>
           </div>

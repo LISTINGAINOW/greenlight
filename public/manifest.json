@@ -1,6 +1,6 @@
 {
-  "name": "GreenLight",
-  "short_name": "GreenLight",
+  "name": "ScriptSwipe",
+  "short_name": "ScriptSwipe",
   "description": "Swipe to find your next great script",
   "start_url": "/",
   "display": "standalone",
